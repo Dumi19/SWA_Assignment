@@ -19,6 +19,7 @@
   "homepage": "https://github.com/olehougaard/weather_report#readme",
   "dependencies": {
     "express": "^4.17.1",
+    "linq": "^4.0.0",
     "ws": "^7.1.1"
   }
 }

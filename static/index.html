@@ -1,8 +1,35 @@
 <html>
+ 
   <head>
+
 
   </head>
   <body>
-    
+    <div class="container"></div>
   </body>
+  <script>
+    async function getForecast(){
+       let url = "http://localhost:8080/forecast"
+       try {
+        let response = await fetch(url);
+        return await response.json();
+       } catch (error) {
+        console.log(error);
+       }     
+   }
+
+   async function renderForcast(){
+    let weather = await getForecast();
+    let html = '';
+    weather.forEach(weather => {
+      let date = new Date(weather.time);
+      let hr = date.getUTCHours();
+      let htmlSegment = `<div class="col-md-6">Place: ${weather.place} <br> from: ${weather.from} <br> time: ${hr}</div> <br>`
+      html += htmlSegment;
+    });
+    let container = document.querySelector(".container")
+    container.innerHTML = html;
+   }
+   renderForcast();
+     </script>
 </html>
