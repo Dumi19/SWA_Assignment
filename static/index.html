@@ -5,6 +5,8 @@
 
   </head>
   <body>
+    <input type="text" id = "input"><br>
+    <button onclick="renderForcast(document.getElementById('input').value)">search</button>
     <div class="container"></div>
   </body>
   <script>
@@ -18,9 +20,10 @@
        }     
    }
 
-   async function renderForcast(){
+   async function renderForcast(city){
     let weather = await getForecast();
     let html = '';
+    weather.filter(w => w.place === city);
     weather.forEach(weather => {
       let date = new Date(weather.time);
       let hr = date.getUTCHours();
@@ -31,6 +34,6 @@
     container.innerHTML = html;
    }
    
-   renderForcast();
+   //renderForcast();
      </script>
 </html>
