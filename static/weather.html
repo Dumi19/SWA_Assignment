@@ -1,0 +1,45 @@
+<html>
+
+<body>
+    <div>
+        <label for="search">Search city:</label>
+        <input type="search" id="search" data-search>
+    </div>
+
+    <div class="weather-data" data-container></div>
+    <template data-weather-template>
+        <div class="container">
+            <div class="header" data-header></div>
+            <div class="body" data-body></div>
+        </div>
+    </template>
+
+</body>
+<script>
+    const weatherTemplate = document.querySelector("[data-weather-template]")
+    const dataContainer = document.querySelector("[data-container]")
+    const searchInput = document.querySelector("[data-search]")
+    let searching = []
+
+    searchInput.addEventListener("input", (e) =>{
+        const value = e.target.value.toLowerCase()
+        console.log(weather)
+    })
+
+    fetch("http://localhost:8080/data")
+        .then(res => res.json())
+        .then(data => {
+            weather = data.map(weather => {
+                const weatherData = weatherTemplate.content.cloneNode(true)
+                const header = weatherData.querySelector("[data-header]")
+                const body = weatherData.querySelector("[data-body]")
+                header.textContent = weather.place
+                body.textConent = weather.type
+                dataContainer.append(weatherData)
+                //console.log(weather)
+                return {City: weather.place, type: weather.type}
+            })
+        })
+</script>
+
+</html>
