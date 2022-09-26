@@ -8,28 +8,69 @@ async function getForecast(){
     }     
 }
 
-async function renderForcast(city){
- let weather = await getForecast();
- let html = '';
- let a = weather.filter((w) => w.place.toLowerCase() == city.toLowerCase());
-  if(a.length == 0){
-    html += '<span>City does not exist</span>'
-  }
- a.forEach(weather => {
-   let date = new Date(weather.time);
-   let hr = date.getUTCHours() +":" + addZeroBefore(date.getUTCMinutes());
-   
-   html += '<div class="col-md-3 card">'
-   html +=  `<div>Place: ${weather.place} <br>
-                                            From: ${weather.from} °C <br>
-                                            To: ${weather.to} °C <br>
-                                            Time: ${hr}</div> <br>`
-   html += '</div>'
- });
- let container = document.querySelector(".row")
- container.innerHTML = html;
-
- function addZeroBefore(n) {
-   return (n < 10 ? '0' : '') + n;
- }
+async function getData(){
+  let url = "http://localhost:8080/data"
+  try {
+   let response = await fetch(url);
+   return await response.json();
+  } catch (error) {
+   console.log(error);
+  }     
 }
+
+async function renderForecast(city){
+  let weather = await getForecast();
+  let html = '';
+  let a = weather.filter((w) => w.place.toLowerCase() == city.toLowerCase());
+  a.forEach(weather => {
+    let date = new Date(weather.time);
+    let hr = date.getUTCHours() +":" + addZeroBefore(date.getUTCMinutes());
+    
+    html += '<div class="col-md-2 card">'
+    html +=  `<div>Place: ${weather.place} <br>
+                    Type: ${weather.type} <br>
+                    Unit: ${weather.unit} <br>
+                    From: ${weather.from} <br>
+                    To: ${weather.to} <br>                                                    
+                    Time: ${hr}</div> <br>`
+    html += '</div>'
+  });
+  let container = document.querySelector(".row")
+  container.innerHTML = html;
+  
+  function addZeroBefore(n) {
+    return (n < 10 ? '0' : '') + n;
+  }
+  
+}
+
+async function latestData(){
+  let weather = await getData();
+  let html = '';
+  let a = () => new Date(
+    weather
+        .map(element => new Date(element.time))
+        .map(Date.parse) // get dates in milliseconds (used for finding the latest date)
+        .reduce((previous, current) => Math.max(previous, current))
+  );
+  const latestData = weather.filter(element => new Date(element.time).getTime() === a().getTime());
+  latestData.forEach(weather => {
+    let date = new Date(weather.time);
+    let hr = date.getUTCHours() +":" + addZeroBefore(date.getUTCMinutes());
+    
+    html += '<div class="col-md-2 card">'
+    html +=  `<div>Place: ${weather.place} <br>
+                  Type: ${weather.type} <br>
+                  Unit: ${weather.unit} <br>
+                  Value: ${weather.value} <br>                                                   
+                  Time: ${hr}</div> <br>`
+    html += '</div>'
+  });
+
+let container = document.querySelector(".row")
+container.innerHTML = html;
+
+function addZeroBefore(n) {
+  return (n < 10 ? '0' : '') + n;
+}
+} 
