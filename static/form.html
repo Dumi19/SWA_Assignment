@@ -1,0 +1,60 @@
+<html>
+
+<body>
+    <div class="container mt-5">
+        <h2>Sending data to server</h2>
+        <form class="row g-3" style="width: 400px;">
+            <div class="col-md-6">
+                <label>Place</label>
+                <input type="text" id="place" placeholder="City Name" required>
+            </div>
+            <div class="col-md-6">
+                <label>Value</label>
+                <input type="text" id="value" placeholder="Value (eg:13)" required>
+            </div>
+            <div class="col-md-6">
+                <label>Unit</label>
+                <input type="text" id="unit" placeholder="Unit (eg C/ % / ms)" required>
+            </div>
+            <div class="col-md-6">
+                <label>Precipitation Type</label>
+                <input type="text" id="precipitation" placeholder="Precipitation Type " required>
+            </div>
+            <div class="col-md-6">
+                <label>Time</label>
+                <input type="text" id="time" placeholder="Time" required>
+            </div>
+            <button class="btn btn-primary" onclick="postData()">Submit</button>
+        </form>
+    </div>
+
+</body>
+<script>
+    function postData() {
+
+        let place = document.getElementById("place").value
+        let value = document.getElementById("value").value
+        let unit = document.getElementById("unit").value
+        let time = document.getElementById("time").value
+        let precipitation = document.getElementById("precipitation").value
+        fetch("http://localhost:8080/data", {
+            method: "POST",
+            headers: {
+                'Accept': 'application/json',
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify({ place: place, value: value, unit: unit, time: time, type: precipitation })
+        })
+            .then((res) => res.json())
+
+    }
+</script>
+<!-- CSS only -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+<!-- JavaScript Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
+    crossorigin="anonymous"></script>
+
+</html>
