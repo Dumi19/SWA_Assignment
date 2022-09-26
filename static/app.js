@@ -1,3 +1,4 @@
+
 async function getForecast(){
     let url = "http://localhost:8080/forecast"
     try {
@@ -18,14 +19,15 @@ async function getData(){
   }     
 }
 
+
 async function renderForecast(city){
+  getMinMaxTemp(city);
   let weather = await getForecast();
   let html = '';
   let a = weather.filter((w) => w.place.toLowerCase() == city.toLowerCase());
   a.forEach(weather => {
     let date = new Date(weather.time);
-    let hr = date.getUTCHours() +":" + addZeroBefore(date.getUTCMinutes());
-    
+    let hr = date.getUTCHours() +":" + addZeroBefore(date.getUTCMinutes());    
     html += '<div class="col-md-2 card">'
     html +=  `<div>Place: ${weather.place} <br>
                     Type: ${weather.type} <br>
@@ -35,13 +37,26 @@ async function renderForecast(city){
                     Time: ${hr}</div> <br>`
     html += '</div>'
   });
-  let container = document.querySelector(".row")
+  let container = document.querySelector(".data")
   container.innerHTML = html;
   
   function addZeroBefore(n) {
     return (n < 10 ? '0' : '') + n;
   }
   
+}
+
+async function getMinMaxTemp(city)
+{
+  let data = await getData();
+  let b = data.filter((w) => w.place.toLowerCase() == city.toLowerCase()).filter((w) => w.type == "temperature");
+  let minTemp = b.map(element => element.value).reduce((a, b) => Math.min(a, b));
+  let maxTemp = b.map(element => element.value).reduce((a, b) => Math.max(a, b));
+  let html = '';
+  html += 'Minimum temperature: ' + minTemp + '<br>';
+  html += 'Maximum temperature: ' + maxTemp + '<br>';
+  let container = document.querySelector(".minMaxTemp")
+  container.innerHTML = html;
 }
 
 async function latestData(){
