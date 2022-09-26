@@ -1,33 +1,48 @@
-async function getForecast(){
-    let url = "http://localhost:8080/forecast"
-    try {
-     let response = await fetch(url);
-     return await response.json();
-    } catch (error) {
-     console.log(error);
-    }     
+async function getForecast() {
+  let url = "http://localhost:8080/forecast"
+  try {
+    let response = await fetch(url);
+    return await response.json();
+  } catch (error) {
+    console.log(error);
+  }
 }
 
-async function getData(){
+async function getData() {
   let url = "http://localhost:8080/data"
   try {
-   let response = await fetch(url);
-   return await response.json();
+    let response = await fetch(url);
+    return await response.json();
   } catch (error) {
-   console.log(error);
-  }     
+    console.log(error);
+  }
+}
+async function getCityWeather(city) {
+  let cityWeather = await getData();
+  let html = '';
+  let filter = cityWeather.filter((filter) => filter.place.toLowerCase() == city.toLowerCase());
+  filter.forEach(cityWeather => {
+    html += '<div class="col-md-2 card">'
+    html += `<div>Place: ${cityWeather.place} <br>
+                    Type: ${cityWeather.type} <br>
+                    Value: ${cityWeather.value} ${cityWeather.unit}<br>
+                    </div> <br>`
+    html += '</div>'
+  });
+  let contianerWeather = document.querySelector(".row")
+  contianerWeather.innerHTML = html;
 }
 
-async function renderForecast(city){
+async function renderForecast(city) {
   let weather = await getForecast();
   let html = '';
   let a = weather.filter((w) => w.place.toLowerCase() == city.toLowerCase());
   a.forEach(weather => {
     let date = new Date(weather.time);
-    let hr = date.getUTCHours() +":" + addZeroBefore(date.getUTCMinutes());
-    
+    let hr = date.getUTCHours() + ":" + addZeroBefore(date.getUTCMinutes());
+
     html += '<div class="col-md-2 card">'
-    html +=  `<div>Place: ${weather.place} <br>
+    html += `<div>Place: ${weather.place} <br>
                     Type: ${weather.type} <br>
                     Unit: ${weather.unit} <br>
                     From: ${weather.from} <br>
@@ -37,29 +52,29 @@ async function renderForecast(city){
   });
   let container = document.querySelector(".row")
   container.innerHTML = html;
-  
+
   function addZeroBefore(n) {
     return (n < 10 ? '0' : '') + n;
   }
-  
+
 }
 
-async function latestData(){
+async function latestData() {
   let weather = await getData();
   let html = '';
   let a = () => new Date(
     weather
-        .map(element => new Date(element.time))
-        .map(Date.parse) // get dates in milliseconds (used for finding the latest date)
-        .reduce((previous, current) => Math.max(previous, current))
+      .map(element => new Date(element.time))
+      .map(Date.parse) // get dates in milliseconds (used for finding the latest date)
+      .reduce((previous, current) => Math.max(previous, current))
   );
   const latestData = weather.filter(element => new Date(element.time).getTime() === a().getTime());
   latestData.forEach(weather => {
     let date = new Date(weather.time);
-    let hr = date.getUTCHours() +":" + addZeroBefore(date.getUTCMinutes());
-    
+    let hr = date.getUTCHours() + ":" + addZeroBefore(date.getUTCMinutes());
+
     html += '<div class="col-md-2 card">'
-    html +=  `<div>Place: ${weather.place} <br>
+    html += `<div>Place: ${weather.place} <br>
                   Type: ${weather.type} <br>
                   Unit: ${weather.unit} <br>
                   Value: ${weather.value} <br>                                                   
@@ -67,10 +82,10 @@ async function latestData(){
     html += '</div>'
   });
 
-let container = document.querySelector(".row")
-container.innerHTML = html;
+  let container = document.querySelector(".row")
+  container.innerHTML = html;
 
-function addZeroBefore(n) {
-  return (n < 10 ? '0' : '') + n;
-}
+  function addZeroBefore(n) {
+    return (n < 10 ? '0' : '') + n;
+  }
 } 
