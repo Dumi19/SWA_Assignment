@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+ 
+  <header>
+    <title>Weather forcast</title>
+
+  </header>
+
+  <style>
+    .container {
+      margin:15px;
+      }
+
+      .card {
+        margin:5px; 
+
+      }
+      .input-group{
+        justify-content: center;
+      }
+      .row{
+        justify-content: center;
+      }
+      span{
+        color:#DC143C;
+      }
+  </style>
+  <body>
+    <div class="container">
+      <div class="input-group mb-3">      
+          <button class="btn btn-primary" type="button" onclick="renderForecast('horsens')">Horsens</button>
+          <button class="btn btn-primary" type="button" onclick="renderForecast('copenhagen')">Copenhagen</button>        
+          <button class="btn btn-primary" type="button" onclick="renderForecast('aarhus')">Aarhus</button>
+          <button class="btn btn-primary" type="button" onclick="latestData()">Latest Data</button>
+      </div>
+      <div class="row minMaxTemp">
+      </div>
+      <div class="row data">
+      </div>
+    </div>
+    <script src="callbackApp.js"></script>
+<!-- CSS only -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">    
+<!-- JavaScript Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
+  </body>
+</html>

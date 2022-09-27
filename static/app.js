@@ -17,6 +17,11 @@ async function getData() {
     console.log(error);
   }
 }
+/**
+ * The function getCityWeather() takes a city name as an argument, and then filters the data from the
+ * API to only show the weather data for that city.
+ * @param city - The city name that you want to get the weather for.
+ */
 async function getCityWeather(city) {
   let cityWeather = await getData();
   let html = '';
@@ -74,6 +79,9 @@ async function getMinMaxTemp(city)
   container.innerHTML = html;
 }
 
+/**
+ * It gets the latest data from the API and displays it on the page.
+ */
 async function latestData() {
   let weather = await getData();
   let html = '';
