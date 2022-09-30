@@ -38,26 +38,28 @@ async function getCityWeather(city) {
   contianerWeather.innerHTML = html;
 }
 
-async function renderForecast(city){
+async function renderForecast(city) {
   getMinMaxTemp(city);
   let weatherForecasts = await getForecast();
   let html = '';
-  let listHtml = '' 
+  let listHtml = ''
 
   const myForcastList = weatherForecasts.filter((fc) => fc.place.toLowerCase() == city.toLowerCase()).map(forecast);
   myForcastList.forEach(weather => {
     let date = new Date(weather.data.getTime());
-    let hr = date.getUTCHours() +":" + addZeroBefore(date.getUTCMinutes());
-       
-     if(weather.getPrecipitationTypes() !== undefined){ getList(weather.getPrecipitationTypes())}
-     if(weather.getDirections() !== undefined){ getList(weather.getDirections())}
+    let hr = date.getUTCHours() + ":" + addZeroBefore(date.getUTCMinutes());
+
+    if (weather.getPrecipitationTypes() !== undefined) { getList(weather.getPrecipitationTypes()) }
+    if (weather.getDirections() !== undefined) { getList(weather.getDirections()) }
 
     html += '<div class="col-md-2 card">'
     html += `<div>Place: ${weather.data.getPlace()} <br>
                     Type: ${weather.data.getType()} <br>`
-    if(listHtml !== ''){
+
+    if (listHtml !== '') {
       html += `${listHtml}`
-    }                
+    }
+
     html += `                     
                     Unit: ${weather.data.getUnit()} <br>
                     From: ${weather.getFrom()} <br>
@@ -73,19 +75,18 @@ async function renderForecast(city){
     return (n < 10 ? '0' : '') + n;
   }
 
-  function getList(list){
-      listHtml += "<ul>"
-      list.forEach(i => {
-        listHtml += `<li>
+  function getList(list) {
+    listHtml += "<ul>"
+    list.forEach(i => {
+      listHtml += `<li>
                   ${i}
                 </li>`
-      });
-      listHtml +="</ul>"
+    });
+    listHtml += "</ul>"
   }
 }
 
-async function getMinMaxTemp(city)
-{
+async function getMinMaxTemp(city) {
 
   let d = await getData();
   const myDataList = d.filter((w) => w.place.toLowerCase() == city.toLowerCase()).filter((w) => w.type == "temperature").filter((w) => {
@@ -121,7 +122,7 @@ async function getMinMaxTemp(city)
 
   function getPreviousDay() {
     let previous = new Date();
-    previous.setDate(previous.getDate() - 1); 
+    previous.setDate(previous.getDate() - 1);
     return previous.getDate();
   }
 
@@ -130,8 +131,9 @@ async function getMinMaxTemp(city)
 }
 
 /**
- * It gets the latest data from the API and displays it on the page.
+ * It gets the latest data from the API and displays it in the HTML.
  */
+
 async function latestData() {
   let weather = await getData();
   const myDataList = weather.map(weatherData)
