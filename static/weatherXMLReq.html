@@ -48,17 +48,18 @@
         </div>
       </nav>
 
-        <div class="contianerWeather">
-            <div class="input-group mb-3">
-                <button class="btn btn-primary" type="button" onclick="getCityWeather('horsens')">Horsesn</button>
-                <button class="btn btn-primary" type="button" onclick="getCityWeather('copenhagen')">Copenhagen</button>
-                <button class="btn btn-primary" type="button" onclick="getCityWeather('aarhus')">Aarhus</button>
-                <button class="btn btn-primary" type="button" onclick="latestData()">Latest Data</button>
-            </div>
-            <div class="row minMaxTemp">
-            </div>
-            <div class="row">
-            </div>
+      <div class="container">
+        <div class="input-group mb-3">      
+            <button class="btn btn-primary" type="button" onclick="renderForecast('Horsens')">Horsens</button>
+            <button class="btn btn-primary" type="button" onclick="renderForecast('Copenhagen')">Copenhagen</button>        
+            <button class="btn btn-primary" type="button" onclick="renderForecast('Aarhus')">Aarhus</button>
+            <button class="btn btn-primary" type="button" onclick="latestData()">Latest Data</button>
+        </div>
+        <div class="row minMaxTemp">
+        </div>
+        <div class="row data">
+        </div>
+      </div>
     </body>
     <script src="callbackApp.js"></script>
     <script src="models.js"></script>
