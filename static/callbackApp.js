@@ -16,17 +16,17 @@ async function getForecast(city) {
     if (request_.readyState === XMLHttpRequest.DONE && request_.status === 200) {
       let res = JSON.parse(request_.responseText);
       let html = '';
-      let a = res.filter((w) => w.place.toLowerCase() == city.toLowerCase());
-      a.forEach(weather => {
+      const myCityWeatherList = res.filter((filter) => filter.place.toLowerCase() == city.toLowerCase()).map(weatherData)
+      myCityWeatherList.forEach(weather => {
         let date = new Date(weather.time);
         let hr = date.getUTCHours() + ":" + addZeroBefore(date.getUTCMinutes());
 
         html += '<div class="col-md-3 card">'
-        html += `<div>Place: ${weather.place} <br>
-                                                    Type: ${weather.type} <br>
-                                                    Unit: ${weather.unit} <br>
-                                                    From: ${weather.from} <br>
-                                                    To: ${weather.to} <br>                                                    
+        html += `<div>Place: ${weather.data.getPlace()} <br>
+                                                    Type: ${weather.data.getType()} <br>
+                                                    Unit: ${weather.data.getUnit()} <br>
+                                                    From: ${weather.data.getFrom()} <br>
+                                                    To: ${weather.data.getTo()} <br>                                                    
                                                     Time: ${hr}</div> <br>`
         html += '</div>'
       });
