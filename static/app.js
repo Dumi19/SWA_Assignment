@@ -27,11 +27,15 @@ async function getCityWeather(city) {
   const myCityWeatherList = cityWeather.filter((filter) => filter.place.toLowerCase() == city.toLowerCase()).map(weatherData)
   let html = '';
   myCityWeatherList.forEach(cityWeather => {
+    let date = new Date(cityWeather.data.getTime())
     html += '<div class="col-md-2 card">'
     html += `<div>Place: ${cityWeather.data.getPlace()} <br>
-                    Type: ${cityWeather.data.getType()} <br>
-                    Value: ${cityWeather.getValue()} ${cityWeather.data.getUnit()}<br>
-                    </div> <br>`
+                Type: ${cityWeather.data.getType()} <br>`
+    if(cityWeather.getDirection() !== undefined){html+=`Direction: ${cityWeather.getDirection()} <br>`}
+    if(cityWeather.getPrecipitationType() !== undefined){html+=`Precipitation Type: ${cityWeather.getPrecipitationType()} <br>`}              
+    html += `   Value: ${cityWeather.getValue()} ${cityWeather.data.getUnit()}<br>
+                Time:  ${date}<br>
+                </div> <br>`
     html += '</div>'
   });
   let contianerWeather = document.querySelector(".row")
@@ -86,6 +90,15 @@ async function renderForecast(city) {
   }
 }
 
+
+/**
+ * It takes a city name as a parameter, makes a request to the server, filters the data based on the
+ * city name, date.
+ *  calculates the minimum and maximum temperature, average wind speed,
+ * and total precipitation.
+ * 
+ * @param city - The name of the city to get the weather data for.
+ */
 async function getMinMaxTemp(city) {
 
   let d = await getData();
@@ -93,6 +106,8 @@ async function getMinMaxTemp(city) {
     let date = new Date(w.time);
     return date.getDate() == getPreviousDay();
   }).map(weatherData);
+
+  //Min and Max temperature for the last day
   let minTemp = myDataList.map(element => element.getValue()).reduce((a, b) => Math.min(a, b));
   let maxTemp = myDataList.map(element => element.getValue()).reduce((a, b) => Math.max(a, b));
   let html = '<div class="col-md-4 card">';

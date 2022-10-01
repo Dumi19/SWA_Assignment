@@ -15,8 +15,10 @@ function commonData(place, type, unit, time) {
     return { getFrom, getTo, getPrecipitationTypes, getDirections, data}
   }
   
-  function weatherData({data, value, type, unit, time, place}) {
+  function weatherData({data, value, type, unit, time, place, direction, precipitation_type}) {
     if(data === undefined) data = commonData(place, type, unit, time)
     const getValue = () => value
-    return { getValue, data}
+    const getDirection = () => direction
+    const getPrecipitationType = () => precipitation_type
+    return { getValue, data, getDirection, getPrecipitationType}
   }

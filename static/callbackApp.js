@@ -5,44 +5,6 @@ const baseUrl = 'http://localhost:8080';
 const request_ = new XMLHttpRequest();
 
 /**
- * It takes a city name as a parameter, makes a GET request to the server, and then displays the
- * results in the browser.
- * @param city - The city name
- */
-async function getForecast(city) {
-  request_.open('GET', `${baseUrl}/forecast`);
-  request_.send();
-  request_.onload = async () => {
-    if (request_.readyState === XMLHttpRequest.DONE && request_.status === 200) {
-      let res = JSON.parse(request_.responseText);
-      let html = '';
-      const myCityWeatherList = res.filter((filter) => filter.place.toLowerCase() == city.toLowerCase()).map(weatherData)
-      myCityWeatherList.forEach(weather => {
-        let date = new Date(weather.time);
-        let hr = date.getUTCHours() + ":" + addZeroBefore(date.getUTCMinutes());
-
-        html += '<div class="col-md-3 card">'
-        html += `<div>Place: ${weather.data.getPlace()} <br>
-                                                    Type: ${weather.data.getType()} <br>
-                                                    Unit: ${weather.data.getUnit()} <br>
-                                                    From: ${weather.data.getFrom()} <br>
-                                                    To: ${weather.data.getTo()} <br>                                                    
-                                                    Time: ${hr}</div> <br>`
-        html += '</div>'
-      });
-      let container = document.querySelector(".row")
-      container.innerHTML = html;
-
-      function addZeroBefore(n) {
-        return (n < 10 ? '0' : '') + n;
-      }
-    } else {
-      throw new Error(`[${new Date().toISOString()}]: HTTP response: ${request_.status} ${request_.statusText}`);
-    }
-  }
-}
-
-/**
  * It takes a city name as an argument, makes a GET request to the server, and then displays the data
  * in the browser.
  * @param  - the city name
@@ -54,12 +16,17 @@ async function getCityWeather(city) {
     if (request_.readyState === XMLHttpRequest.DONE && request_.status === 200) {
       let res = JSON.parse(request_.responseText);
       let html = '';
-      let b = res.filter((w) => w.place.toLowerCase() == city.toLowerCase());
+      let b = res.filter((w) => w.place.toLowerCase() == city.toLowerCase()).map(weatherData);
+
       b.forEach(cityWeather => {
+        let date = new Date(cityWeather.data.getTime())
         html += '<div class="col-md-2 card">'
-        html += `<div>Place: ${cityWeather.place} <br>
-                    Type: ${cityWeather.type} <br>
-                    Value: ${cityWeather.value} ${cityWeather.unit}<br>
+        html += `<div>Place: ${cityWeather.data.getPlace()} <br>
+                    Type: ${cityWeather.data.getType()} <br>`
+        if(cityWeather.getDirection() !== undefined){html+=`Direction: ${cityWeather.getDirection()} <br>`}
+        if(cityWeather.getPrecipitationType() !== undefined){html+=`Precipitation Type: ${cityWeather.getPrecipitationType()} <br>`}              
+        html += `   Value: ${cityWeather.getValue()} ${cityWeather.data.getUnit()}<br>
+                    Time:  ${date}<br>
                     </div> <br>`
         html += '</div>'
       });
@@ -144,15 +111,15 @@ async function latestData() {
           .map(Date.parse)
           .reduce((previous, current) => Math.max(previous, current))
       );
-      const latestData = res.filter(element => new Date(element.time).getTime() === a().getTime());
+      const latestData = res.filter(element => new Date(element.time).getTime() === a().getTime()).map(weatherData);
       latestData.forEach(weather => {
-        let date = new Date(weather.time);
+        let date = new Date(weather.data.getTime());
         let hr = date.getUTCHours() + ":" + addZeroBefore(date.getUTCMinutes());
 
         html += '<div class="col-md-2 card">'
-        html += `<div>Place: ${weather.place} <br>
-                  Type: ${weather.type} <br>
-                  Unit: ${weather.value} ${weather.unit} <br>                                                
+        html += `<div>Place: ${weather.data.getPlace()} <br>
+                  Type: ${weather.data.getType()} <br>
+                  Unit: ${weather.getValue()} ${weather.data.getUnit()} <br>                                                
                   Time: ${hr}</div> <br>`
         html += '</div>'
       });
@@ -186,6 +153,8 @@ async function getMinMaxTemp(city) {
     if (request_.readyState === XMLHttpRequest.DONE && request_.status === 200) {
 
       let data = JSON.parse(request_.responseText);
+
+      //Min and Max temperature for the last day
       const myDataList = data.filter((w) => w.place.toLowerCase() == city.toLowerCase()).filter((w) => w.type == "temperature").filter((w) => {
         let date = new Date(w.time);
         return date.getDate() == getPreviousDay();
@@ -197,6 +166,7 @@ async function getMinMaxTemp(city) {
       html += 'Maximum temperature: ' + maxTemp + '<br>';
       html += '</div>'
 
+      //Average wind speed for the last day
       const myDataListForWind = data.filter((w) => w.place.toLowerCase() == city.toLowerCase()).filter((w) => w.type == "wind speed").filter((w) => {
         let date = new Date(w.time);
         return date.getDate() == getPreviousDay();
@@ -206,6 +176,7 @@ async function getMinMaxTemp(city) {
       html += 'Average Wind Speed: ' + parseFloat(averageWindSpeed).toFixed(1) + '<br>';
       html += '</div>'
 
+      //Total precipitation for the last day
       const myDataListForPrecipitation = data.filter((w) => w.place.toLowerCase() == city.toLowerCase()).filter((w) => w.type == "precipitation").filter((w) => {
         let date = new Date(w.time);
         return date.getDate() == getPreviousDay();
